@@ -43,3 +43,38 @@ func Reduce[Elem any](sli []Elem, f func(Elem, Elem) Elem) (ans Elem) {
 	}
 	return
 }
+
+func Range(a, b int) (ans []int) {
+	ans = make([]int, 0, b-a)
+	for i := a; i < b; i++ {
+		ans = append(ans, i)
+	}
+	return
+}
+
+func Zip[A, B any](a []A, b []B) (ans []struct {
+	a A
+	b B
+}) {
+	ans = make([]struct {
+		a A
+		b B
+	}, 0, min(len(a), len(b)))
+	for i := range a {
+		if i >= len(b) {
+			break
+		}
+		ans = append(ans, struct {
+			a A
+			b B
+		}{a[i], b[i]})
+	}
+	return
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
