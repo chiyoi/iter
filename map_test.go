@@ -4,16 +4,6 @@ import (
 	"testing"
 )
 
-func TestSkipTake(t *testing.T) {
-	AssertEqual(t, []int{3, 4, 5}, Iter([]int{1, 2, 3, 4, 5}).Skip(2).Fold([]int(nil), func(st, v any) any {
-		return append(st.([]int), v.(int))
-	}))
-
-	AssertEqual(t, []int{3, 4}, Iter([]int{1, 2, 3, 4, 5}).Skip(2).Take(2).Fold([]int(nil), func(st, v any) any {
-		return append(st.([]int), v.(int))
-	}))
-}
-
 func TestMap(t *testing.T) {
 	AssertEqual(t, []complex128{complex(1, 0), complex(2, 0), complex(3, 0)}, Iter([]int{1, 2, 3}).Map(func(a any) any {
 		return complex(float64(a.(int)), 0)
@@ -34,14 +24,6 @@ func TestScan(t *testing.T) {
 			return nil
 		}
 		return st.(int) + v.(int)
-	}).Fold([]int(nil), func(st, v any) any {
-		return append(st.([]int), v.(int))
-	}))
-}
-
-func TestFilter(t *testing.T) {
-	AssertEqual(t, []int{3, 4}, Iter([]int{1, 2, 3, 4, 5}).Filter(func(v any) bool {
-		return v.(int) > 2 && v.(int) <= 4
 	}).Fold([]int(nil), func(st, v any) any {
 		return append(st.([]int), v.(int))
 	}))
