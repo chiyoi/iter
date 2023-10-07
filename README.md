@@ -1,5 +1,5 @@
 # iter
-Iterator framework based on empty interface.
+Iterator based on empty interface.
 - Make an iterator:
     - `Iter(slice)`
     - `From(func() (item any))`
