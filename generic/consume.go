@@ -44,3 +44,14 @@ func Fold[T, St any](it Iterator[T], st St, f func(St, T) St) St {
 	}
 	return st
 }
+
+func Collect[T any](it Iterator[T]) (ans []T) {
+	for {
+		t, ok := it.Next()
+		if !ok {
+			break
+		}
+		ans = append(ans, t)
+	}
+	return
+}
