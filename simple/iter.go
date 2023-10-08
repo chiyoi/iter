@@ -52,22 +52,13 @@ func Range(a, b int) (ans []int) {
 	return
 }
 
-func Zip[A, B any](a []A, b []B) (ans []struct {
-	a A
-	b B
-}) {
-	ans = make([]struct {
-		a A
-		b B
-	}, 0, min(len(a), len(b)))
+func Zip[A, B any](a []A, b []B) (ans []ZipItem[A, B]) {
+	ans = make([]ZipItem[A, B], 0, min(len(a), len(b)))
 	for i := range a {
 		if i >= len(b) {
 			break
 		}
-		ans = append(ans, struct {
-			a A
-			b B
-		}{a[i], b[i]})
+		ans = append(ans, ZipItem[A, B]{a[i], b[i]})
 	}
 	return
 }
@@ -77,4 +68,9 @@ func min(a, b int) int {
 		return a
 	}
 	return b
+}
+
+type ZipItem[A, B any] struct {
+	A A
+	B B
 }

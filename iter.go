@@ -220,6 +220,6 @@ func Collect[T any](it Iterator[T]) (ans []T) {
 }
 
 type ZipItem[A, B any] struct {
-	a A
-	b B
+	A A
+	B B
 }
