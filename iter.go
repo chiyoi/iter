@@ -158,30 +158,6 @@ func At[T any](it Iterator[T], i int) (v T, ok bool) {
 	return Skip(it, i).Next()
 }
 
-func Max[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
-	return Reduce(it, func(a, b T) T {
-		if a > b {
-			return a
-		}
-		return b
-	})
-}
-
-func Min[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
-	return Reduce(it, func(a, b T) T {
-		if a < b {
-			return a
-		}
-		return b
-	})
-}
-
-func Sum[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
-	return Reduce(it, func(a, b T) T {
-		return a + b
-	})
-}
-
 func Reduce[T any](it Iterator[T], f func(T, T) T) (ans T, ok bool) {
 	ans, ok = it.Next()
 	if !ok {
@@ -217,6 +193,30 @@ func Collect[T any](it Iterator[T]) (ans []T) {
 		ans = append(ans, v)
 	}
 	return
+}
+
+func Min[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
+	return Reduce(it, func(a, b T) T {
+		if a < b {
+			return a
+		}
+		return b
+	})
+}
+
+func Max[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
+	return Reduce(it, func(a, b T) T {
+		if a > b {
+			return a
+		}
+		return b
+	})
+}
+
+func Sum[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
+	return Reduce(it, func(a, b T) T {
+		return a + b
+	})
 }
 
 type ZipItem[A, B any] struct {
