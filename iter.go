@@ -1,6 +1,8 @@
 package iter
 
-import "cmp"
+import (
+	"cmp"
+)
 
 const (
 	Continue = true
@@ -90,7 +92,7 @@ func Map[A, B any](it Iterator[A], f func(A) B) Iterator[B] {
 }
 
 func Scan[T, St any](it Iterator[T], st St, f func(St, T) St) Iterator[St] {
-	return IteratorFunc[St](func() (st St, ok bool) {
+	return IteratorFunc[St](func() (out St, ok bool) {
 		v, ok := it.Next()
 		if !ok {
 			return
