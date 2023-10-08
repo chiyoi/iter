@@ -31,14 +31,17 @@ func Iter[T any](sli []T) Iterator[T] {
 }
 
 func Range(a, b int, step int) Iterator[int] {
+	if step == 0 || a <= b && step < 0 || a >= b && step > 0 {
+		return Empty[int]()
+	}
 	i := a
 	return IteratorFunc[int](func() (int, bool) {
-		if i < b {
-			i0 := i
-			i += step
-			return i0, true
+		if step > 0 && i >= b || step < 0 && i <= b {
+			return 0, false
 		}
-		return 0, false
+		i0 := i
+		i += step
+		return i0, true
 	})
 }
 
