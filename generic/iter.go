@@ -65,19 +65,14 @@ func Chain[T any](it1, it2 Iterator[T]) Iterator[T] {
 	})
 }
 
-type zip[A, B any] struct {
-	a A
-	b B
-}
-
-func Zip[A, B any](itA Iterator[A], itB Iterator[B]) Iterator[zip[A, B]] {
-	return IteratorFunc[zip[A, B]](func() (zip[A, B], bool) {
+func Zip[A, B any](itA Iterator[A], itB Iterator[B]) Iterator[ZipItem[A, B]] {
+	return IteratorFunc[ZipItem[A, B]](func() (ZipItem[A, B], bool) {
 		a, okA := itA.Next()
 		b, okB := itB.Next()
 		if !okA || !okB {
-			return zip[A, B]{}, false
+			return ZipItem[A, B]{}, false
 		}
-		return zip[A, B]{a, b}, true
+		return ZipItem[A, B]{a, b}, true
 	})
 }
 
@@ -214,4 +209,9 @@ func Collect[T any](it Iterator[T]) (ans []T) {
 		ans = append(ans, t)
 	}
 	return
+}
+
+type ZipItem[A, B any] struct {
+	a A
+	b B
 }
