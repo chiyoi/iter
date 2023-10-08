@@ -151,3 +151,86 @@ func TestScan(t *testing.T) {
 		}
 	}
 }
+
+func TestReduce(t *testing.T) {
+	for i, tc := range []struct {
+		sli []int
+		f   func(int, int) int
+		out int
+		ok  bool
+	}{
+		{[]int{1, 2, 3, 4, 5}, func(a, b int) int { return a + b }, 15, true},
+		{[]int{1, 2, 3, 4, 5}, func(a, b int) int { return a * b }, 120, true},
+		{nil, nil, 0, false},
+	} {
+		out, ok := Reduce(Iter(tc.sli), tc.f)
+		if out != tc.out || ok != tc.ok {
+			t.Errorf("Testcase %d: got (%v, %v), expect (%v, %v).", i, out, ok, tc.out, tc.ok)
+		}
+	}
+}
+
+func TestFold(t *testing.T) {
+	for i, tc := range []struct {
+		sli []int
+		st  string
+		f   func(string, int) string
+		out string
+	}{
+		{[]int{1, 2, 3, 4, 5}, "", func(st string, v int) string { return st + strconv.Itoa(v) }, "12345"},
+		{[]int{1, 2, 3, 4, 5}, "nyan", func(st string, v int) string { return st + " " + strconv.Itoa(v) }, "nyan 1 2 3 4 5"},
+		{nil, "", nil, ""},
+		{nil, "nyan", nil, "nyan"},
+	} {
+		out := Fold(Iter(tc.sli), tc.st, tc.f)
+		if out != tc.out {
+			t.Errorf("Testcase %d: got %v, expect %v.", i, out, tc.out)
+		}
+	}
+}
+
+func TestFilter(t *testing.T) {
+	for i, tc := range []struct {
+		sli []int
+		f   func(int) bool
+		out []int
+	}{
+		{[]int{1, 2, 3, 4, 5}, func(v int) bool { return v <= 3 }, []int{1, 2, 3}},
+		{[]int{1, 2, 3, 4, 5}, func(int) bool { return false }, nil},
+		{nil, nil, nil},
+	} {
+		out := Collect(Filter(Iter(tc.sli), tc.f))
+		if !reflect.DeepEqual(out, tc.out) {
+			t.Errorf("Testcase %d: got %v, expect %v.", i, out, tc.out)
+		}
+	}
+}
+
+func TestMinMaxSum(t *testing.T) {
+	for i, tc := range []struct {
+		sli   []int
+		min   int
+		minOK bool
+		max   int
+		maxOK bool
+		sum   int
+		sumOK bool
+	}{
+		{[]int{3, 5, 4, 1, 2}, 1, true, 5, true, 15, true},
+		{[]int{0}, 0, true, 0, true, 0, true},
+		{nil, 0, false, 0, false, 0, false},
+	} {
+		min, ok := Min(Iter(tc.sli))
+		if min != tc.min || ok != tc.minOK {
+			t.Errorf("Testcase %d min: got (%v, %v), expect (%v, %v).", i, min, ok, tc.min, tc.minOK)
+		}
+		max, ok := Max(Iter(tc.sli))
+		if max != tc.max || ok != tc.maxOK {
+			t.Errorf("Testcase %d max: got (%v, %v), expect (%v, %v).", i, max, ok, tc.max, tc.maxOK)
+		}
+		sum, ok := Sum(Iter(tc.sli))
+		if sum != tc.sum || ok != tc.sumOK {
+			t.Errorf("Testcase %d sum: got (%v, %v), expect (%v, %v).", i, sum, ok, tc.sum, tc.sumOK)
+		}
+	}
+}
