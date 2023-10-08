@@ -9,6 +9,7 @@ Iterator based on generic.
   Continue = true
   Break    = false
   ```
+  The special `ZipItem` structure is iterated in `Zip` iterators.
 - Make an iterator.
   - `IteratorFunc`, function as an iterator.
   - `Iter` on a slice.
