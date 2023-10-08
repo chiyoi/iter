@@ -1,5 +1,7 @@
 package iter
 
+import "cmp"
+
 const (
 	Continue = true
 	Break    = false
@@ -77,4 +79,138 @@ func Zip[A, B any](itA Iterator[A], itB Iterator[B]) Iterator[zip[A, B]] {
 		}
 		return zip[A, B]{a, b}, true
 	})
+}
+
+func Map[A, B any](it Iterator[A], f func(A) B) Iterator[B] {
+	return IteratorFunc[B](func() (b B, ok bool) {
+		a, ok := it.Next()
+		if !ok {
+			return
+		}
+		return f(a), true
+	})
+}
+
+func Scan[T, St any](it Iterator[T], st St, f func(St, T) St) Iterator[St] {
+	return IteratorFunc[St](func() (st St, ok bool) {
+		a, ok := it.Next()
+		if !ok {
+			return
+		}
+		st = f(st, a)
+		return st, true
+	})
+}
+
+func Take[T any](it Iterator[T], count int) Iterator[T] {
+	i := 0
+	return IteratorFunc[T](func() (t T, ok bool) {
+		if i < count {
+			return it.Next()
+		}
+		return
+	})
+}
+
+func Skip[T any](it Iterator[T], count int) Iterator[T] {
+	var flag bool
+	return IteratorFunc[T](func() (t T, ok bool) {
+		if !flag {
+			for i := 0; i < count; i++ {
+				_, ok = it.Next()
+				if !ok {
+					return
+				}
+			}
+			flag = true
+		}
+		return it.Next()
+	})
+}
+
+func Filter[T any](it Iterator[T], f func(T) bool) Iterator[T] {
+	return IteratorFunc[T](func() (t T, ok bool) {
+		t, ok = it.Next()
+		if !ok {
+			return
+		}
+		for !f(t) {
+			t, ok = it.Next()
+			if !ok {
+				return
+			}
+		}
+		return
+	})
+}
+
+func Last[T any](it Iterator[T]) (t T, ok bool) {
+	return Reduce(it, func(_, t T) T {
+		return t
+	})
+}
+
+func At[T any](it Iterator[T], i int) (t T, ok bool) {
+	return Skip(it, i).Next()
+}
+
+func Max[T cmp.Ordered](it Iterator[T]) (t T, ok bool) {
+	return Reduce(it, func(a, b T) T {
+		if a > b {
+			return a
+		}
+		return b
+	})
+}
+
+func Min[T cmp.Ordered](it Iterator[T]) (t T, ok bool) {
+	return Reduce(it, func(a, b T) T {
+		if a < b {
+			return a
+		}
+		return b
+	})
+}
+
+func Sum[T cmp.Ordered](it Iterator[T]) (t T, ok bool) {
+	return Reduce(it, func(a, b T) T {
+		return a + b
+	})
+}
+
+func Reduce[T any](it Iterator[T], f func(T, T) T) (ans T, ok bool) {
+	ans, ok = it.Next()
+	if !ok {
+		return
+	}
+	for {
+		t, ok := it.Next()
+		if !ok {
+			break
+		}
+		ans = f(ans, t)
+	}
+	return
+}
+
+func Fold[T, St any](it Iterator[T], st St, f func(St, T) St) St {
+	for {
+		t, ok := it.Next()
+		if !ok {
+			break
+		}
+		st = f(st, t)
+	}
+	return st
+}
+
+func Collect[T any](it Iterator[T]) (ans []T) {
+	for {
+		t, ok := it.Next()
+		if !ok {
+			break
+		}
+		ans = append(ans, t)
+	}
+	return
 }
