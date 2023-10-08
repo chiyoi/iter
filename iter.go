@@ -52,19 +52,19 @@ func Empty[T any]() Iterator[T] {
 	})
 }
 
-func Repeat[T any](t T) Iterator[T] {
+func Repeat[T any](v T) Iterator[T] {
 	return IteratorFunc[T](func() (T, bool) {
-		return t, true
+		return v, true
 	})
 }
 
-func Chain[T any](it1, it2 Iterator[T]) Iterator[T] {
+func Chain[T any](itA, itB Iterator[T]) Iterator[T] {
 	return IteratorFunc[T](func() (T, bool) {
-		t, ok := it1.Next()
+		t, ok := itA.Next()
 		if ok {
 			return t, true
 		}
-		return it2.Next()
+		return itB.Next()
 	})
 }
 
@@ -91,18 +91,18 @@ func Map[A, B any](it Iterator[A], f func(A) B) Iterator[B] {
 
 func Scan[T, St any](it Iterator[T], st St, f func(St, T) St) Iterator[St] {
 	return IteratorFunc[St](func() (st St, ok bool) {
-		a, ok := it.Next()
+		v, ok := it.Next()
 		if !ok {
 			return
 		}
-		st = f(st, a)
+		st = f(st, v)
 		return st, true
 	})
 }
 
 func Take[T any](it Iterator[T], count int) Iterator[T] {
 	i := 0
-	return IteratorFunc[T](func() (t T, ok bool) {
+	return IteratorFunc[T](func() (v T, ok bool) {
 		if i < count {
 			i++
 			return it.Next()
@@ -113,7 +113,7 @@ func Take[T any](it Iterator[T], count int) Iterator[T] {
 
 func Skip[T any](it Iterator[T], count int) Iterator[T] {
 	var flag bool
-	return IteratorFunc[T](func() (t T, ok bool) {
+	return IteratorFunc[T](func() (v T, ok bool) {
 		if !flag {
 			for i := 0; i < count; i++ {
 				_, ok = it.Next()
@@ -128,13 +128,13 @@ func Skip[T any](it Iterator[T], count int) Iterator[T] {
 }
 
 func Filter[T any](it Iterator[T], f func(T) bool) Iterator[T] {
-	return IteratorFunc[T](func() (t T, ok bool) {
-		t, ok = it.Next()
+	return IteratorFunc[T](func() (v T, ok bool) {
+		v, ok = it.Next()
 		if !ok {
 			return
 		}
-		for !f(t) {
-			t, ok = it.Next()
+		for !f(v) {
+			v, ok = it.Next()
 			if !ok {
 				return
 			}
@@ -143,20 +143,20 @@ func Filter[T any](it Iterator[T], f func(T) bool) Iterator[T] {
 	})
 }
 
-func Last[T any](it Iterator[T]) (t T, ok bool) {
+func Last[T any](it Iterator[T]) (v T, ok bool) {
 	return Reduce(it, func(_, t T) T {
 		return t
 	})
 }
 
-func At[T any](it Iterator[T], i int) (t T, ok bool) {
+func At[T any](it Iterator[T], i int) (v T, ok bool) {
 	if i < 0 {
 		return
 	}
 	return Skip(it, i).Next()
 }
 
-func Max[T cmp.Ordered](it Iterator[T]) (t T, ok bool) {
+func Max[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
 	return Reduce(it, func(a, b T) T {
 		if a > b {
 			return a
@@ -165,7 +165,7 @@ func Max[T cmp.Ordered](it Iterator[T]) (t T, ok bool) {
 	})
 }
 
-func Min[T cmp.Ordered](it Iterator[T]) (t T, ok bool) {
+func Min[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
 	return Reduce(it, func(a, b T) T {
 		if a < b {
 			return a
@@ -174,7 +174,7 @@ func Min[T cmp.Ordered](it Iterator[T]) (t T, ok bool) {
 	})
 }
 
-func Sum[T cmp.Ordered](it Iterator[T]) (t T, ok bool) {
+func Sum[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
 	return Reduce(it, func(a, b T) T {
 		return a + b
 	})
@@ -186,33 +186,33 @@ func Reduce[T any](it Iterator[T], f func(T, T) T) (ans T, ok bool) {
 		return
 	}
 	for {
-		t, ok := it.Next()
+		v, ok := it.Next()
 		if !ok {
 			break
 		}
-		ans = f(ans, t)
+		ans = f(ans, v)
 	}
 	return
 }
 
 func Fold[T, St any](it Iterator[T], st St, f func(St, T) St) St {
 	for {
-		t, ok := it.Next()
+		v, ok := it.Next()
 		if !ok {
 			break
 		}
-		st = f(st, t)
+		st = f(st, v)
 	}
 	return st
 }
 
 func Collect[T any](it Iterator[T]) (ans []T) {
 	for {
-		t, ok := it.Next()
+		v, ok := it.Next()
 		if !ok {
 			break
 		}
-		ans = append(ans, t)
+		ans = append(ans, v)
 	}
 	return
 }
