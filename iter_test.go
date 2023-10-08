@@ -1,6 +1,7 @@
 package iter
 
 import (
+	"fmt"
 	"reflect"
 	"strconv"
 	"testing"
@@ -18,6 +19,16 @@ func TestIterCollect(t *testing.T) {
 			t.Errorf("Testcase %d: got %v, expect %v.", i, got, tc[1])
 		}
 	}
+}
+
+func ExampleIter() {
+	fmt.Println(Collect(Iter([]int{1, 2, 3, 4, 5})))
+	// Output: [1 2 3 4 5]
+}
+
+func ExampleCollect() {
+	fmt.Println(Collect(Iter([]int{1, 2, 3, 4, 5})))
+	// Output: [1 2 3 4 5]
 }
 
 func TestRange(t *testing.T) {
@@ -40,6 +51,11 @@ func TestRange(t *testing.T) {
 	}
 }
 
+func ExampleRange() {
+	fmt.Println(Collect(Range(0, 10, 1)))
+	// Output: [0 1 2 3 4 5 6 7 8 9]
+}
+
 func TestEmptyRepeatChainSkipTake(t *testing.T) {
 	for i, tc := range []struct {
 		n                    int
@@ -57,6 +73,16 @@ func TestEmptyRepeatChainSkipTake(t *testing.T) {
 			t.Errorf("Testcase %d: got %v, expect %v.", i, out, tc.out)
 		}
 	}
+}
+
+func ExampleEmpty() {
+	fmt.Println(Collect(Empty[int]()))
+	// Output: []
+}
+
+func ExampleRepeat() {
+	fmt.Println(Collect(Take(Repeat(3), 2)))
+	// Output: [3 3]
 }
 
 func TestZip(t *testing.T) {
