@@ -7,7 +7,12 @@ import (
 	"testing"
 )
 
-func TestIterCollect(t *testing.T) {
+func ExampleIter() {
+	fmt.Println(Collect(Iter([]int{1, 2, 3, 4, 5})))
+	// Output: [1 2 3 4 5]
+}
+
+func TestIter(t *testing.T) {
 	for i, tc := range [][2][]int{
 		{{1, 2, 3, 4, 5}, {1, 2, 3, 4, 5}},
 		{{0}, {0}},
@@ -19,16 +24,6 @@ func TestIterCollect(t *testing.T) {
 			t.Errorf("Testcase %d: got %v, expect %v.", i, got, tc[1])
 		}
 	}
-}
-
-func ExampleIter() {
-	fmt.Println(Collect(Iter([]int{1, 2, 3, 4, 5})))
-	// Output: [1 2 3 4 5]
-}
-
-func ExampleCollect() {
-	fmt.Println(Collect(Iter([]int{1, 2, 3, 4, 5})))
-	// Output: [1 2 3 4 5]
 }
 
 func TestRange(t *testing.T) {
