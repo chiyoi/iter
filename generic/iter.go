@@ -147,6 +147,9 @@ func Last[T any](it Iterator[T]) (t T, ok bool) {
 }
 
 func At[T any](it Iterator[T], i int) (t T, ok bool) {
+	if i < 0 {
+		return
+	}
 	return Skip(it, i).Next()
 }
 
