@@ -106,6 +106,7 @@ func Take[T any](it Iterator[T], count int) Iterator[T] {
 	i := 0
 	return IteratorFunc[T](func() (t T, ok bool) {
 		if i < count {
+			i++
 			return it.Next()
 		}
 		return
