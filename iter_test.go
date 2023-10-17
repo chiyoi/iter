@@ -226,32 +226,3 @@ func TestFilter(t *testing.T) {
 		}
 	}
 }
-
-func TestMinMaxSum(t *testing.T) {
-	for i, tc := range []struct {
-		sli   []int
-		min   int
-		minOK bool
-		max   int
-		maxOK bool
-		sum   int
-		sumOK bool
-	}{
-		{[]int{3, 5, 4, 1, 2}, 1, true, 5, true, 15, true},
-		{[]int{0}, 0, true, 0, true, 0, true},
-		{nil, 0, false, 0, false, 0, false},
-	} {
-		min, ok := Min(Iter(tc.sli))
-		if min != tc.min || ok != tc.minOK {
-			t.Errorf("Testcase %d min: got (%v, %v), expect (%v, %v).", i, min, ok, tc.min, tc.minOK)
-		}
-		max, ok := Max(Iter(tc.sli))
-		if max != tc.max || ok != tc.maxOK {
-			t.Errorf("Testcase %d max: got (%v, %v), expect (%v, %v).", i, max, ok, tc.max, tc.maxOK)
-		}
-		sum, ok := Sum(Iter(tc.sli))
-		if sum != tc.sum || ok != tc.sumOK {
-			t.Errorf("Testcase %d sum: got (%v, %v), expect (%v, %v).", i, sum, ok, tc.sum, tc.sumOK)
-		}
-	}
-}

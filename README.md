@@ -31,4 +31,3 @@ Iterator based on generic.
   - `Reduce` with reducing function.
   - `Fold` with initial state and reducing function.
   - `Collect` an iterator into a slice.
-  - Get the `Min`, or `Max` element for an iterator with ordered type, or calculate the `Sum`.

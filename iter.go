@@ -1,9 +1,5 @@
 package iter
 
-import (
-	"cmp"
-)
-
 const (
 	Continue = true
 	Break    = false
@@ -193,30 +189,6 @@ func Collect[T any](it Iterator[T]) (ans []T) {
 		ans = append(ans, v)
 	}
 	return
-}
-
-func Min[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
-	return Reduce(it, func(a, b T) T {
-		if a < b {
-			return a
-		}
-		return b
-	})
-}
-
-func Max[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
-	return Reduce(it, func(a, b T) T {
-		if a > b {
-			return a
-		}
-		return b
-	})
-}
-
-func Sum[T cmp.Ordered](it Iterator[T]) (ans T, ok bool) {
-	return Reduce(it, func(a, b T) T {
-		return a + b
-	})
 }
 
 type ZipItem[A, B any] struct {
