@@ -159,11 +159,11 @@ func TestScan(t *testing.T) {
 	for i, tc := range []struct {
 		sli []int
 		st  int
-		f   func(int, int) int
+		f   func(int, int) (int, bool)
 		out []int
 	}{
-		{[]int{1, 2, 3, 4, 5}, 0, func(st int, v int) int { return st + v }, []int{1, 3, 6, 10, 15}},
-		{[]int{1, 2, 3, 4, 5}, 1, func(st int, v int) int { return st + v }, []int{2, 4, 7, 11, 16}},
+		{[]int{1, 2, 3, 4, 5}, 0, func(st int, v int) (int, bool) { return st + v, true }, []int{1, 3, 6, 10, 15}},
+		{[]int{1, 2, 3, 4, 5}, 1, func(st int, v int) (int, bool) { return st + v, true }, []int{2, 4, 7, 11, 16}},
 		{nil, 0, nil, nil},
 	} {
 		out := Collect(Scan(Iter(tc.sli), tc.st, tc.f))
@@ -195,11 +195,11 @@ func TestFold(t *testing.T) {
 	for i, tc := range []struct {
 		sli []int
 		st  string
-		f   func(string, int) string
+		f   func(string, int) (string, bool)
 		out string
 	}{
-		{[]int{1, 2, 3, 4, 5}, "", func(st string, v int) string { return st + strconv.Itoa(v) }, "12345"},
-		{[]int{1, 2, 3, 4, 5}, "nyan", func(st string, v int) string { return st + " " + strconv.Itoa(v) }, "nyan 1 2 3 4 5"},
+		{[]int{1, 2, 3, 4, 5}, "", func(st string, v int) (string, bool) { return st + strconv.Itoa(v), true }, "12345"},
+		{[]int{1, 2, 3, 4, 5}, "nyan", func(st string, v int) (string, bool) { return st + " " + strconv.Itoa(v), true }, "nyan 1 2 3 4 5"},
 		{nil, "", nil, ""},
 		{nil, "nyan", nil, "nyan"},
 	} {

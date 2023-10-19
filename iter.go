@@ -87,13 +87,17 @@ func Map[A, B any](it Iterator[A], f func(A) B) Iterator[B] {
 	})
 }
 
-func Scan[T, St any](it Iterator[T], st St, f func(St, T) St) Iterator[St] {
+func Scan[T, St any](it Iterator[T], st St, f func(St, T) (St, bool)) Iterator[St] {
 	return IteratorFunc[St](func() (out St, ok bool) {
 		v, ok := it.Next()
 		if !ok {
 			return
 		}
-		st = f(st, v)
+		st1, ok := f(st, v)
+		if !ok {
+			return st, false
+		}
+		st = st1
 		return st, true
 	})
 }
@@ -169,13 +173,17 @@ func Reduce[T any](it Iterator[T], f func(T, T) T) (ans T, ok bool) {
 	return
 }
 
-func Fold[T, St any](it Iterator[T], st St, f func(St, T) St) St {
+func Fold[T, St any](it Iterator[T], st St, f func(St, T) (St, bool)) St {
 	for {
 		v, ok := it.Next()
 		if !ok {
 			break
 		}
-		st = f(st, v)
+		st1, ok := f(st, v)
+		if !ok {
+			return st
+		}
+		st = st1
 	}
 	return st
 }
