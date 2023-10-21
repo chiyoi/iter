@@ -1,6 +1,8 @@
 package iter
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestY(t *testing.T) {
 	fact := Y(func(fact func(int) int) func(int) int {
