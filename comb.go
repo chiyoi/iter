@@ -4,17 +4,9 @@ func I[A any](x A) A {
 	return x
 }
 
-type yc[A, B any] func(yc[A, B]) func(A) B
-
 func Y[A, B any](f func(func(A) B) func(A) B) func(A) B {
-	return (func(c yc[A, B]) func(A) B {
-		return f(func(a A) B {
-			return c(c)(a)
-		})
-	})(func(c yc[A, B]) func(A) B {
-		return f(func(a A) B {
-			return c(c)(a)
-		})
+	return f(func(x A) B {
+		return Y(f)(x)
 	})
 }
 
