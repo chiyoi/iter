@@ -12,6 +12,11 @@ func ExampleIter() {
 	// Output: [1 2 3 4 5]
 }
 
+func ExampleIterRev() {
+	fmt.Println(Collect(IterRev([]int{1, 2, 3, 4, 5})))
+	// Output: [5 4 3 2 1]
+}
+
 func TestIter(t *testing.T) {
 	for i, tc := range [][2][]int{
 		{{1, 2, 3, 4, 5}, {1, 2, 3, 4, 5}},
@@ -24,6 +29,25 @@ func TestIter(t *testing.T) {
 			t.Errorf("Testcase %d: got %v, expect %v.", i, got, tc[1])
 		}
 	}
+}
+
+func TestIterRev(t *testing.T) {
+	for i, tc := range [][2][]int{
+		{{1, 2, 3, 4, 5}, {5, 4, 3, 2, 1}},
+		{{0}, {0}},
+		{{}, nil},
+		{nil, nil},
+	} {
+		got := Collect(IterRev(tc[0]))
+		if !reflect.DeepEqual(got, tc[1]) {
+			t.Errorf("Testcase %d: got %v, expect %v.", i, got, tc[1])
+		}
+	}
+}
+
+func ExampleRange() {
+	fmt.Println(Collect(Range(0, 10, 1)))
+	// Output: [0 1 2 3 4 5 6 7 8 9]
 }
 
 func TestRange(t *testing.T) {
@@ -46,30 +70,6 @@ func TestRange(t *testing.T) {
 	}
 }
 
-func ExampleRange() {
-	fmt.Println(Collect(Range(0, 10, 1)))
-	// Output: [0 1 2 3 4 5 6 7 8 9]
-}
-
-func TestEmptyRepeatChainSkipTake(t *testing.T) {
-	for i, tc := range []struct {
-		n                    int
-		countSkip, countTake int
-		out                  []int
-	}{
-		{1, 3, 3, []int{1, 1, 1}},
-		{0, 0, 3, []int{0, 0, 0}},
-		{-1, -1, 3, []int{-1, -1, -1}},
-		{1, 3, 0, nil},
-		{1, 3, -1, nil},
-	} {
-		out := Collect(Take(Skip(Chain(Empty[int](), Repeat(tc.n)), tc.countSkip), tc.countTake))
-		if !reflect.DeepEqual(out, tc.out) {
-			t.Errorf("Testcase %d: got %v, expect %v.", i, out, tc.out)
-		}
-	}
-}
-
 func ExampleEmpty() {
 	fmt.Println(Collect(Empty[int]()))
 	// Output: []
@@ -78,6 +78,26 @@ func ExampleEmpty() {
 func ExampleRepeat() {
 	fmt.Println(Collect(Take(Repeat(3), 2)))
 	// Output: [3 3]
+}
+
+func TestEmptyOnceRepeatChainSkipTake(t *testing.T) {
+	for i, tc := range []struct {
+		x          int
+		n          int
+		skip, take int
+		out        []int
+	}{
+		{123, 1, 3, 3, []int{1, 1, 1}},
+		{123, 0, 0, 3, []int{123, 0, 0}},
+		{123, -1, -1, 3, []int{123, -1, -1}},
+		{123, 1, 3, 0, nil},
+		{123, 1, 3, -1, nil},
+	} {
+		out := Collect(Take(Skip(Chain(Empty[int](), Chain(Once(tc.x), Repeat(tc.n))), tc.skip), tc.take))
+		if !reflect.DeepEqual(out, tc.out) {
+			t.Errorf("Testcase %d: got %v, expect %v.", i, out, tc.out)
+		}
+	}
 }
 
 func TestZip(t *testing.T) {
@@ -222,6 +242,22 @@ func TestFilter(t *testing.T) {
 	} {
 		out := Collect(Filter(Iter(tc.sli), tc.f))
 		if !reflect.DeepEqual(out, tc.out) {
+			t.Errorf("Testcase %d: got %v, expect %v.", i, out, tc.out)
+		}
+	}
+}
+
+func TestCount(t *testing.T) {
+	for i, tc := range []struct {
+		sli []int
+		out int
+	}{
+		{[]int{1, 2, 3, 4, 5}, 5},
+		{[]int{}, 0},
+		{nil, 0},
+	} {
+		out := Count(Iter(tc.sli))
+		if out != tc.out {
 			t.Errorf("Testcase %d: got %v, expect %v.", i, out, tc.out)
 		}
 	}

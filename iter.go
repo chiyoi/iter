@@ -17,11 +17,24 @@ func (it IteratorFunc[T]) Next() (T, bool) {
 
 func Iter[T any](sli []T) Iterator[T] {
 	i := 0
-	return IteratorFunc[T](func() (T, bool) {
+	return IteratorFunc[T](func() (v T, ok bool) {
 		if i < len(sli) {
-			i0 := i
+			v, ok = sli[i], true
 			i++
-			return sli[i0], true
+			return
+		}
+		var zero T
+		return zero, false
+	})
+}
+
+func IterRev[T any](sli []T) Iterator[T] {
+	i := len(sli) - 1
+	return IteratorFunc[T](func() (v T, ok bool) {
+		if i >= 0 {
+			v, ok = sli[i], true
+			i--
+			return
 		}
 		var zero T
 		return zero, false
@@ -47,6 +60,18 @@ func Empty[T any]() Iterator[T] {
 	return IteratorFunc[T](func() (T, bool) {
 		var zero T
 		return zero, false
+	})
+}
+
+func Once[T any](v T) Iterator[T] {
+	var flag bool
+	return IteratorFunc[T](func() (T, bool) {
+		if flag {
+			var zero T
+			return zero, false
+		}
+		flag = true
+		return v, true
 	})
 }
 
@@ -195,6 +220,17 @@ func Collect[T any](it Iterator[T]) (ans []T) {
 			break
 		}
 		ans = append(ans, v)
+	}
+	return
+}
+
+func Count[T any](it Iterator[T]) (count int) {
+	for {
+		_, ok := it.Next()
+		if !ok {
+			break
+		}
+		count++
 	}
 	return
 }
