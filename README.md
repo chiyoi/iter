@@ -1,5 +1,5 @@
 # iter
-Iterator based on generic.
+Iterators.
 - Interface.
   ```go
   Iterator[T].Next() (T, bool)
