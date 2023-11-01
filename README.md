@@ -31,3 +31,8 @@ Iterators.
   - `Reduce` with reducing function.
   - `Fold` with initial state and reducing function.
   - `Collect` an iterator into a slice.
+
+---
+Combinators.
+- `Call` a function later.
+- `Y` combinator to make recursive.
