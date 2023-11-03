@@ -15,10 +15,10 @@ func Wrap[A any](v A) Option[A] {
 }
 
 func Unwrap[A any](o Option[A]) (v A) {
-	if o.some {
-		v = o.v
+	if !o.some {
+		return
 	}
-	return
+	return o.v
 }
 
 func Some[A any](v A) Option[A] {

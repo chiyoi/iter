@@ -24,7 +24,7 @@ func TestResult(t *testing.T) {
 				d := Try(c, func(c int) (d int, err error) {
 					return c + 1, nil
 				})
-				return Values(d)
+				return Unwrap(d)
 			},
 			3, nil,
 		},

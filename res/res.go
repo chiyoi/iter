@@ -9,7 +9,7 @@ func Wrap[A any](v A, err error) (res Result[A]) {
 	return Result[A]{v, err}
 }
 
-func Values[A any](res Result[A]) (A, error) {
+func Unwrap[A any](res Result[A]) (A, error) {
 	return res.v, res.err
 }
 
