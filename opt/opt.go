@@ -5,8 +5,6 @@ type Option[A any] struct {
 	some bool
 }
 
-type NoneType struct{}
-
 func Some[A any](v A) Option[A] {
 	return Option[A]{v, true}
 }
