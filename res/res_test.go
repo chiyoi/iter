@@ -1,4 +1,4 @@
-package result
+package res
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ func TestResult(t *testing.T) {
 		{
 			1,
 			func(i int) (int, error) {
-				a := Result(i, nil)
+				a := Wrap(i, nil)
 				b := Try(a, func(a int) (b string, err error) {
 					return fmt.Sprintf("%d", a+1), nil
 				})
