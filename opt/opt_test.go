@@ -29,6 +29,19 @@ func TestOption(t *testing.T) {
 			},
 			3,
 		},
+		{
+			0,
+			func(i int) int {
+				a := Or(i, func() int {
+					return 1
+				})
+				b := Or(a, func() int {
+					return 2
+				})
+				return b
+			},
+			1,
+		},
 	} {
 		out := tc.transform(tc.in)
 		if out != tc.out {

@@ -9,10 +9,10 @@ func Then[A, B comparable](a A, f func(A) B) B {
 	return f(a)
 }
 
-func Or[A comparable](a A, f func(A) A) A {
+func Or[A comparable](a A, f func() A) A {
 	var zero A
 	if a != zero {
 		return a
 	}
-	return f(a)
+	return f()
 }
