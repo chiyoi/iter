@@ -16,15 +16,13 @@ func TestResult(t *testing.T) {
 		{
 			1,
 			func(i int) (int, error) {
-				a := Wrap(i, nil)
-				b := Try(a, func(a int) (b string, err error) {
-					return fmt.Sprintf("%d", a+1), nil
+				b, err := Try(i, nil, func(a int) (b string, err error) {
+					return fmt.Sprint(a + 1), nil
 				})
-				c := Try(b, strconv.Atoi)
-				d := Try(c, func(c int) (d int, err error) {
+				c, err := Try(b, err, strconv.Atoi)
+				return Try(c, err, func(c int) (d int, err error) {
 					return c + 1, nil
 				})
-				return Unwrap(d)
 			},
 			3, nil,
 		},
