@@ -1,8 +1,17 @@
 package opt
 
+import "reflect"
+
 type Option[A any] struct {
 	v    A
 	some bool
+}
+
+func Wrap[A any](v A) Option[A] {
+	if reflect.ValueOf(v).IsZero() {
+		return None[A]()
+	}
+	return Some(v)
 }
 
 func Some[A any](v A) Option[A] {
