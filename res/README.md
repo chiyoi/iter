@@ -1,2 +1,3 @@
-# iter/simple
-Iterator based on slice (no lazy).
+# iter/res
+Monad runner for multiple return with suffixing error.
+- Check the error and `Then` continue.

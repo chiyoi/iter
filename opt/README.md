@@ -1,2 +1,4 @@
-# iter/simple
-Iterator based on slice (no lazy).
+# iter/opt
+Monad runner for zero value.
+- Check the optional and `Then` continue.
+- Return the optional `Or` continue.
