@@ -16,11 +16,11 @@ func TestResult(t *testing.T) {
 		{
 			1,
 			func(i int) (int, error) {
-				b, err := Try(i, nil, func(a int) (b string, err error) {
+				b, err := Then(i, nil, func(a int) (b string, err error) {
 					return fmt.Sprint(a + 1), nil
 				})
-				c, err := Try(b, err, strconv.Atoi)
-				return Try(c, err, func(c int) (d int, err error) {
+				c, err := Then(b, err, strconv.Atoi)
+				return Then(c, err, func(c int) (d int, err error) {
 					return c + 1, nil
 				})
 			},
