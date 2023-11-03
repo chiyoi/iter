@@ -1,4 +1,4 @@
-package iter
+package cmb
 
 func Call[A, B any](f func(A) B, x A) func() B {
 	return func() B {

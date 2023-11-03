@@ -36,3 +36,7 @@ Iterators.
 Combinators.
 - `Call` a function later.
 - `Y` combinator to make recursive.
+
+---
+Monads.
+- `Result` wraps result with probable error.
