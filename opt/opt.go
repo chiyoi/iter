@@ -11,8 +11,8 @@ func Some[A any](v A) Option[A] {
 	return Option[A]{v, true}
 }
 
-func None() Option[NoneType] {
-	return Option[NoneType]{struct{}{}, false}
+func None[A any]() Option[A] {
+	return Option[A]{}
 }
 
 func Then[A, B any](a Option[A], f func(A) Option[B]) Option[B] {
