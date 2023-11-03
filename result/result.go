@@ -1,4 +1,4 @@
-package iter
+package result
 
 type result[A any] struct {
 	v   A
