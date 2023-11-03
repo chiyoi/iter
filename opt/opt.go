@@ -22,3 +22,10 @@ func Then[A, B any](a Option[A], f func(A) Option[B]) Option[B] {
 	}
 	return f(a.v)
 }
+
+func Or[A any](a Option[A], f func() Option[A]) Option[A] {
+	if a.some {
+		return a
+	}
+	return f()
+}
