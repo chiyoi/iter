@@ -14,6 +14,13 @@ func Wrap[A any](v A) Option[A] {
 	return Some(v)
 }
 
+func Unwrap[A any](o Option[A]) (v A) {
+	if o.some {
+		v = o.v
+	}
+	return
+}
+
 func Some[A any](v A) Option[A] {
 	return Option[A]{v, true}
 }
