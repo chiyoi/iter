@@ -206,7 +206,7 @@ func Reduce[T any](it Iterator[T], f func(T, T) T) (ans T, ok bool) {
 	return
 }
 
-func Fold[T, St any](it Iterator[T], st St, f func(St, T) (St, bool)) St {
+func Fold[St, T any](it Iterator[T], st St, f func(St, T) (St, bool)) St {
 	for {
 		v, ok := it.Next()
 		if !ok {
