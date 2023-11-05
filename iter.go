@@ -28,6 +28,14 @@ func Iter[T any](sli []T) Iterator[T] {
 	})
 }
 
+func Keys[K comparable, A any](m map[K]A) Iterator[K] {
+	keys := make([]K, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	return Iter(keys)
+}
+
 func IterRev[T any](sli []T) Iterator[T] {
 	i := len(sli) - 1
 	return IteratorFunc[T](func() (v T, ok bool) {
