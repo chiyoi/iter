@@ -15,9 +15,3 @@ func And[A any](err error, f func() (A, error)) (A, error) {
 	}
 	return f()
 }
-
-type NoneType = struct{}
-
-var (
-	None = NoneType{}
-)
