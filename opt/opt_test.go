@@ -1,43 +1,40 @@
 package opt
 
 import (
-	"fmt"
-	"strconv"
 	"testing"
+
+	"github.com/chiyoi/iter/cmb"
 )
 
-func TestOption(t *testing.T) {
+func TestOr(t *testing.T) {
 	for i, tc := range []struct {
 		in        int
 		transform func(int) int
 		out       int
 	}{
 		{
-			1,
+			0,
 			func(i int) int {
-				a := Then(i, func(i int) string {
-					return fmt.Sprint(i + 1)
-				})
-				b := Then(a, func(s string) int {
-					i, err := strconv.Atoi(s)
-					if err != nil {
-						return 0
-					}
-					return i + 1
-				})
+				a := Or(i, cmb.Literal(1))
+				b := Or(a, cmb.Literal(2))
 				return b
 			},
-			3,
+			1,
 		},
 		{
 			0,
 			func(i int) int {
-				a := Or(i, func() int {
-					return 1
-				})
-				b := Or(a, func() int {
-					return 2
-				})
+				a := Or(i, cmb.Literal(0))
+				b := Or(a, cmb.Literal(1))
+				return b
+			},
+			1,
+		},
+		{
+			1,
+			func(i int) int {
+				a := Or(i, cmb.Literal(2))
+				b := Or(a, cmb.Literal(3))
 				return b
 			},
 			1,

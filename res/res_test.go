@@ -24,7 +24,24 @@ func TestResult(t *testing.T) {
 					return c + 1, nil
 				})
 			},
-			3, nil,
+			3,
+			nil,
+		},
+		{
+			1,
+			func(i int) (int, error) {
+				a, err := And[int](nil, func() (int, error) {
+					return 2, nil
+				})
+				b, err := And[int](err, func() (int, error) {
+					return 3, nil
+				})
+				return And[int](err, func() (int, error) {
+					return i + a + b, nil
+				})
+			},
+			6,
+			nil,
 		},
 	} {
 		out, err := tc.transform(tc.in)
