@@ -9,3 +9,15 @@ func Then[B, A any](a A, err error, f func(A) (B, error)) (B, error) {
 }
 
 type None = struct{}
+
+type Hook[T any] func(T) (T, error)
+
+func Composed[T any](hooks ...Hook[T]) Hook[T] {
+	return func(t T) (T, error) {
+		var err error
+		for _, hook := range hooks {
+			t, err = Then(t, err, hook)
+		}
+		return t, err
+	}
+}
