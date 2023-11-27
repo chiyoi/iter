@@ -12,7 +12,7 @@ type None = struct{}
 
 type Hook[T any] func(T) (T, error)
 
-func Composed[T any](hooks ...Hook[T]) Hook[T] {
+func ComposedHooks[T any](hooks ...Hook[T]) Hook[T] {
 	return func(t T) (T, error) {
 		var err error
 		for _, hook := range hooks {
