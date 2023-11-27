@@ -1,5 +1,5 @@
 # iter/res
 Monad runner for return value with error.
-- Check the error and `Then` redeem the value.
-- Value `None` contains nothing.
+- Check the error and `Redeem` the value.
+- Check the error and `Consume` the value.
 - Register a `Hook` function.

@@ -18,10 +18,10 @@ func TestResult(t *testing.T) {
 			1,
 			func(x int) (int, error) {
 				var err error
-				y, err := Then(x, err, runnerItoa)
+				y, err := R(x, err, runnerItoa)
 				y += "1"
-				x, err = Then(y, err, strconv.Atoi)
-				return Then(x, err, runnerInc)
+				x, err = R(y, err, strconv.Atoi)
+				return R(x, err, runnerInc)
 			},
 			12,
 			nil,
@@ -30,10 +30,10 @@ func TestResult(t *testing.T) {
 			1,
 			func(x int) (int, error) {
 				var err error
-				y, err := Then(x, err, runnerItoa)
+				y, err := R(x, err, runnerItoa)
 				y += "nyan"
-				x, err = Then(y, err, strconv.Atoi)
-				return Then(x, err, runnerInc)
+				x, err = R(y, err, strconv.Atoi)
+				return R(x, err, runnerInc)
 			},
 			0,
 			strconv.ErrSyntax,
