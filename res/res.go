@@ -8,4 +8,4 @@ func Then[B, A any](a A, err error, f func(A) (B, error)) (B, error) {
 	return f(a)
 }
 
-type None struct{}
+type None = struct{}
