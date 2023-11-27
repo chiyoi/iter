@@ -23,7 +23,9 @@ func ComposedHooks[T any](hooks ...Hook[T]) Hook[T] {
 	return func(t T) (T, error) {
 		var err error
 		for _, hook := range hooks {
-			t, err = R(t, err, hook)
+			if hook != nil {
+				t, err = R(t, err, hook)
+			}
 		}
 		return t, err
 	}
