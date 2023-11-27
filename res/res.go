@@ -1,5 +1,6 @@
 package res
 
+// R (Redeem)
 func R[B, A any](a A, err error, f func(A) (B, error)) (B, error) {
 	if err != nil {
 		var zero B
@@ -8,6 +9,7 @@ func R[B, A any](a A, err error, f func(A) (B, error)) (B, error) {
 	return f(a)
 }
 
+// C (Consume)
 func C[T any](v T, err error, f func(T) error) error {
 	if err != nil {
 		return err
