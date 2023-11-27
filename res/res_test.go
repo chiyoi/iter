@@ -1,9 +1,10 @@
 package res
 
 import (
-	"fmt"
 	"strconv"
 	"testing"
+
+	"github.com/chiyoi/apricot/test"
 )
 
 func TestResult(t *testing.T) {
@@ -15,38 +16,39 @@ func TestResult(t *testing.T) {
 	}{
 		{
 			1,
-			func(i int) (int, error) {
-				b, err := Then(i, nil, func(a int) (b string, err error) {
-					return fmt.Sprint(a + 1), nil
-				})
-				c, err := Then(b, err, strconv.Atoi)
-				return Then(c, err, func(c int) (d int, err error) {
-					return c + 1, nil
-				})
+			func(x int) (int, error) {
+				var err error
+				y, err := Then(x, err, runnerItoa)
+				y += "1"
+				x, err = Then(y, err, strconv.Atoi)
+				return Then(x, err, runnerInc)
 			},
-			3,
+			12,
 			nil,
 		},
 		{
 			1,
-			func(i int) (int, error) {
-				a, err := And[int](nil, func() (int, error) {
-					return 2, nil
-				})
-				b, err := And[int](err, func() (int, error) {
-					return 3, nil
-				})
-				return And[int](err, func() (int, error) {
-					return i + a + b, nil
-				})
+			func(x int) (int, error) {
+				var err error
+				y, err := Then(x, err, runnerItoa)
+				y += "nyan"
+				x, err = Then(y, err, strconv.Atoi)
+				return Then(x, err, runnerInc)
 			},
-			6,
-			nil,
+			0,
+			strconv.ErrSyntax,
 		},
 	} {
 		out, err := tc.transform(tc.in)
-		if out != tc.out || err != tc.err {
-			t.Errorf("Testcase %d: out (%v, %v), expect (%v, %v).", i, out, err, tc.out, tc.err)
-		}
+		test.CheckEqual(t, i, "out", out, tc.out)
+		test.CheckErrorIs(t, i, "err", err, tc.err)
 	}
+}
+
+func runnerInc(x int) (int, error) {
+	return x + 1, nil
+}
+
+func runnerItoa(x int) (string, error) {
+	return strconv.Itoa(x), nil
 }

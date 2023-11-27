@@ -1,4 +1,3 @@
 # iter/res
-Monad runner for multiple return values with suffixing error.
-- Check the error `Then` redeem a value.
-- Check the error `And` get a value.
+Monad runner for return value with error.
+- Check the error and `Then` redeem the value.
