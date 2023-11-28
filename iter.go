@@ -13,13 +13,7 @@ var (
 	}
 )
 
-type Mapping[A, B any] func(A) (B, error)
-
-type Folding[A, B any] func(B) func(A) (B, error)
-
-type Iterator[A any] func() (A, error)
-
-func Iter[A any](sli []A) Iterator[A] {
+func Iter[A any](sli []A) func() (A, error) {
 	i := 0
 	return func() (a A, err error) {
 		if i < len(sli) {
@@ -32,14 +26,14 @@ func Iter[A any](sli []A) Iterator[A] {
 	}
 }
 
-func Map[A, B any](it Iterator[A], f Mapping[A, B]) Iterator[B] {
+func Map[A, B any](it func() (A, error), f func(A) (B, error)) func() (B, error) {
 	return func() (b B, err error) {
 		a, err := it()
 		return res.R(a, err, f)
 	}
 }
 
-func Collect[A any](it Iterator[A]) (ans []A, err error) {
+func Collect[A any](it func() (A, error)) (ans []A, err error) {
 	for {
 		var a A
 		a, err = it()
