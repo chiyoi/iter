@@ -10,11 +10,20 @@ func R[B, A any](a A, err error, f func(A) (B, error)) (B, error) {
 }
 
 // C (Consume)
-func C[T any](v T, err error, f func(T) error) error {
+func C[A any](v A, err error, f func(A) error) error {
 	if err != nil {
 		return err
 	}
 	return f(v)
+}
+
+// M (Map)
+func M[A, B any](a A, err error, f func(A) B) (B, error) {
+	if err != nil {
+		var zero B
+		return zero, err
+	}
+	return f(a), nil
 }
 
 type Hook[T any] func(T) (T, error)
